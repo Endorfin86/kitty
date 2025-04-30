@@ -14,7 +14,7 @@ from aiogram import Bot, Dispatcher, types # v.aiogram 2.25.2
 from aiogram.types import InputFile
 from aiogram.utils import executor
 
-key = "sk-wj9HWhe9hYSWLvObJeWOERm8uQu9DAf9"
+key = "sk-wj9HWhe9hYSWLvObJeWOERm8uQu9DAf"
 url = "https://api.proxyapi.ru/openai/v1"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"}
 
