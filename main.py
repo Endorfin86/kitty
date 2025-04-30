@@ -1,4 +1,4 @@
-import os, time, re
+import os, time, re, asyncio
 from io import BytesIO
 from datetime import datetime
 
@@ -10,17 +10,19 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from aiogram import Bot, Dispatcher, types # v.aiogram 2.25.2
+from aiogram import Bot, Dispatcher, types #v.aiogram 2.25.2
 from aiogram.types import InputFile
 from aiogram.utils import executor
 
-API_TOKEN = '7884432603:AAEbzWlL-og0o622RAMTk7B9KZtDUViX658'
-CHANNEL_ID = '@feed_without_filters' 
-URL_SECTION = 'https://ria.ru/politics/'
-CHECK_TIME = 3600
+API_TOKEN = '7884432603:AAEbzWlL-og0o622RAMTk7B9KZtDUViX658'    #токен бота
+URL_SECTION = 'https://ria.ru/world/'                           #источник данных
+CHANNEL_ID = '@feed_without_filters'                            #приемник данных
+CHECK_TIME = 3600                                               #частота запросов к источнику
+DELAY_POST = 60                                               #задержка между публикациями постов
 
-key = "sk-wj9HWhe9hYSWLvObJeWOERm8uQu9DAf9"
-url = "https://api.proxyapi.ru/openai/v1"
+KEY_OPENAI = "sk-wj9HWhe9hYSWLvObJeWOERm8uQu9DAf9"              #ключ openai
+URL_REPEATER = "https://api.proxyapi.ru/openai/v1"              #прокладка для доступа к openai
+
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"}
 
 request_for_ai = """
@@ -43,8 +45,8 @@ dp = Dispatcher(bot)
 def getText(urlOnArticle):
 	
 	client = OpenAI(
-		api_key = key,
-		base_url = url
+		api_key = CHECK_TIME,
+		base_url = URL_REPEATER
 	)
 
 	response = client.responses.create(
@@ -175,8 +177,8 @@ async def getArticles(urlOnSection):
             # Печать результатов
             if time_pattern.match(time):
 
-                text = getText(href)
-                # text = "Это тестовый текст"
+                #text = getText(href)
+                text = "Это тестовый текст"
                 if text == "Не найдено." or text == "Не найдено":
                     print(f'{getCurrentTime()} AI не смог найти статью или обработать полученый текст')
                     continue 
@@ -194,7 +196,7 @@ async def getArticles(urlOnSection):
                 add_to_history(href)
                 if media != False:
                     deleteMedia(media)
-
+                await asyncio.sleep(DELAY_POST)
         print(f"{getCurrentTime()} Все доступные статьи опубликованы")
     else:
         print("Главный массив со статьями не найден на странице")
