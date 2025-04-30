@@ -14,12 +14,14 @@ from aiogram import Bot, Dispatcher, types # v.aiogram 2.25.2
 from aiogram.types import InputFile
 from aiogram.utils import executor
 
-key = "sk-wj9HWhe9hYSWLvObJeWOERm8uQu9DAf"
-url = "https://api.proxyapi.ru/openai/v1"
-headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"}
-
 API_TOKEN = '7884432603:AAEbzWlL-og0o622RAMTk7B9KZtDUViX658'
 CHANNEL_ID = '@feed_without_filters' 
+URL_SECTION = 'https://ria.ru/politics/'
+CHECK_TIME = 3600
+
+key = "sk-wj9HWhe9hYSWLvObJeWOERm8uQu9DAf9"
+url = "https://api.proxyapi.ru/openai/v1"
+headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36"}
 
 request_for_ai = """
 прочитай статью по этой ссылке. 
@@ -252,9 +254,9 @@ def getCurrentTime():
 #Запускаем основную функцию
 async def main(_):
     while True:
-        await getArticles("https://ria.ru/politics/")
-        print(f"{getCurrentTime()} Следующая проверка через 1 час")
-        time.sleep(3600) #Проверяем свежие статьи каждый час  
+        await getArticles(URL_SECTION)
+        print(f"{getCurrentTime()} Следующая проверка через {CHECK_TIME / 60} мин.")
+        time.sleep(CHECK_TIME) #Проверяем свежие статьи каждый час  
 
 if __name__ == "__main__":
 	executor.start_polling(dp, skip_updates=True, on_startup=main)
